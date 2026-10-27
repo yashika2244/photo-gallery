@@ -11,13 +11,13 @@ import { Gallery } from './components/Gallery';
  */
 export function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900">
       {/* Top Application Bar */}
-      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {/* Inline SVG Camera/Gallery Brand Icon */}
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-500/20">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5"
@@ -55,7 +55,7 @@ export function App() {
       </main>
 
       {/* Clean Minimalist Footer */}
-      <footer className="mt-auto border-t border-slate-200/80 bg-white py-6">
+      <footer className="mt-auto border-t border-slate-200/70 bg-white/70 backdrop-blur-sm py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
           <p>
             Celebrare Frontend React Internship Assignment &bull; Built with React, Vite &amp; Tailwind CSS

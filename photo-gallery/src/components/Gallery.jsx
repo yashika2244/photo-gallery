@@ -9,16 +9,8 @@ import {
   FAVOURITES_STORAGE_KEY,
 } from '../reducers/favouritesReducer';
 
-/**
- * Gallery Component
- * 
- * Main gallery orchestrator responsible for:
- * 1. Consuming photos, loading, and error states from `useFetchPhotos`
- * 2. Managing the real-time controlled search filter by author name
- * 3. Managing favourites state and persistence using `useReducer` and `localStorage`
- * 4. Optimizing reference stability and computations via `useCallback` and `useMemo`
- * 5. Rendering loading, error, empty search, and populated responsive photo grid states
- */
+//  * Gallery Component
+
 export function Gallery() {
   // 1. Fetch photos from custom hook
   const { photos, loading, error } = useFetchPhotos();
@@ -69,18 +61,6 @@ export function Gallery() {
     return () => window.removeEventListener('storage', handleStorageEvent);
   }, []);
 
-  /**
-   * REQUIREMENT 7: useCallback for Search Change Handler
-   * 
-   * Purpose:
-   * Wraps the input change event handler to preserve its functional reference across component re-renders.
-   * Because `setSearchQuery` is guaranteed to have a stable identity by React, the dependency array
-   * is empty ([]). This ensures that child components or downstream hooks consuming this callback
-   * do not receive a newly allocated function pointer on every render.
-   * 
-   * Note: useCallback does not magically make the handler execution faster; its real value is
-   * reference-stability preventing unnecessary re-subscribing or re-rendering of memoized children.
-   */
   const handleSearchChange = useCallback((event) => {
     setSearchQuery(event.target.value);
   }, []);
@@ -104,14 +84,7 @@ export function Gallery() {
   }, []);
 
   /**
-   * REQUIREMENT 7: useMemo for Real-Time Author Filtering
-   * 
-   * Purpose:
-   * Computes the filtered photo list from the source `photos` array and `searchQuery`.
-   * Re-evaluates only when `photos` or `searchQuery` changes, preventing expensive array
-   * allocations and regex/string processing on unrelated re-renders (such as when toggling
-   * favourites or updating unrelated local UI states).
-   * 
+  
    * Filtering rules:
    * - Real-time filtering by author name
    * - Case-insensitive matching
@@ -140,29 +113,30 @@ export function Gallery() {
   }, [favouritesState.favourites]);
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14">
       {/* Gallery Header */}
-      <header className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 mb-3">
-          Curated Photo Gallery
+      <header className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 mb-3">
+          Curated Photo{" "}
+          <span className="text-blue-600">Gallery</span>
         </h1>
-        <p className="text-base text-slate-600">
+        <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl mx-auto">
           Discover handpicked captures from talented photographers around the world.
           Save your favourite shots with persistent bookmarking.
         </p>
       </header>
 
       {/* Control Bar: Search Input and Photo Count Indicator */}
-      <div className="mb-8 sm:mb-10 max-w-2xl mx-auto">
+      <div className="mb-7 sm:mb-8 max-w-xl mx-auto">
         <div className="relative w-full">
           <label htmlFor="gallery-author-search" className="sr-only">
             Search photos by photographer name
           </label>
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
             {/* Inline SVG Search Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5 text-slate-400"
+              className="w-4 h-4 text-slate-400"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -183,7 +157,7 @@ export function Gallery() {
             onChange={handleSearchChange}
             placeholder="Search by photographer name (e.g. John, Alejandro)..."
             disabled={loading || Boolean(error)}
-            className="w-full pl-11 pr-11 py-3 sm:py-3.5 text-sm sm:text-base bg-white border border-slate-200/90 rounded-2xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.04)] disabled:bg-slate-100 disabled:cursor-not-allowed hover:border-slate-300"
+            className="w-full h-11 sm:h-12 pl-11 pr-11 text-sm bg-white border border-slate-200/90 rounded-2xl text-slate-900 placeholder-slate-400 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.05)] transition-all duration-200 hover:border-slate-300 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/15 focus-visible:outline-none focus-visible:border-blue-600 focus-visible:ring-4 focus-visible:ring-blue-500/15 disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
           />
 
           {/* Clear Search Button inside input */}
@@ -192,11 +166,11 @@ export function Gallery() {
               type="button"
               onClick={handleClearSearch}
               aria-label="Clear author search"
-              className="absolute inset-y-0 right-0 my-auto mr-2.5 w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 transition-all cursor-pointer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-4 h-4"
+                className="w-3.5 h-3.5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -211,29 +185,35 @@ export function Gallery() {
           )}
         </div>
 
-        {/* Status Count Label */}
+        {/* Compact Rounded Status Badges for Photo Count and Favourites */}
         {!loading && !error && (
-          <div className="mt-3.5 flex items-center justify-between text-xs sm:text-sm text-slate-500 px-1 font-medium">
-            <span>
-              Showing <span className="font-semibold text-slate-700">{filteredPhotos.length}</span> of{' '}
-              <span className="font-semibold text-slate-700">{photos.length}</span> photos
-            </span>
-
-            {favouritesState.favourites.length > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200/60">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-3.5 h-3.5 text-rose-500"
-                  aria-hidden="true"
-                >
-                  <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                </svg>
-                {favouritesState.favourites.length}{' '}
-                {favouritesState.favourites.length === 1 ? 'favourite' : 'favourites'} saved
+          <div className="mt-3 flex items-center justify-between gap-2.5 flex-wrap px-0.5">
+            {/* Photo count status badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/95 text-slate-600 border border-slate-200/90 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" aria-hidden="true" />
+              <span>
+                Showing <strong className="font-semibold text-slate-900">{filteredPhotos.length}</strong> of{' '}
+                <strong className="font-semibold text-slate-900">{photos.length}</strong> photos
               </span>
-            )}
+            </div>
+
+            {/* Favourite count status badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/95 text-slate-600 border border-slate-200/90 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className={`w-3.5 h-3.5 ${favouritesState.favourites.length > 0 ? 'text-rose-500' : 'text-slate-400'
+                  }`}
+                aria-hidden="true"
+              >
+                <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+              </svg>
+              <span>
+                <strong className="font-semibold text-slate-900">{favouritesState.favourites.length}</strong>{' '}
+                {favouritesState.favourites.length === 1 ? 'favourite' : 'favourites'}
+              </span>
+            </div>
           </div>
         )}
       </div>

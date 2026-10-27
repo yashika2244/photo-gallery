@@ -60,7 +60,7 @@ export function useFetchPhotos() {
     return () => {
       controller.abort();
     };
-  }, []); // Empty dependency array ensures photos are fetched strictly once on initial mount
+  }, []);// Fetch photos on mount and abort the request during cleanup.
 
   return { photos, loading, error };
 }
